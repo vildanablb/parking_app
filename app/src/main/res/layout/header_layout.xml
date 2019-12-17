@@ -14,13 +14,14 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="50dp"
+            android:src="@mipmap/ic_launcher"
             app:layout_constraintRight_toRightOf="parent"
-            android:src="@mipmap/ic_launcher_round"/>
+            />
 
         <TextView
             android:id="@+id/username"

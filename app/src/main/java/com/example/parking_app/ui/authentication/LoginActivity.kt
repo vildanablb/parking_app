@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import com.example.parking_app.R
 import com.example.parking_app.ui.main.MainActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -93,14 +94,9 @@ class LoginActivity : AppCompatActivity() {
                 ) { task ->
                     if (task.isSuccessful) {
                         val user = auth?.currentUser
-
-
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "Sign in successful welcome " + user!!.displayName!!,
-                            Toast.LENGTH_SHORT
-                        ).show()
                         progress.dismiss()
+                        MainActivity.launch(this, null, user, user?.photoUrl)
+                        finishAffinity()
 
                     } else {
                         Toast.makeText(
