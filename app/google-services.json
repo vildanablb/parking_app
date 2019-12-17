@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "443634677513",
+    "firebase_url": "https://parkingassist-af99b.firebaseio.com",
+    "project_id": "parkingassist-af99b",
+    "storage_bucket": "parkingassist-af99b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443634677513:android:33e39e1fe72500a01545d8",
+        "android_client_info": {
+          "package_name": "com.example.parking_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "443634677513-ris4ca84oi3d3m6agdh11e1kcsmkobrq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parking_app",
+            "certificate_hash": "2a3df3f23545548aa138d663e855f1f9f6af9d66"
+          }
+        },
+        {
+          "client_id": "443634677513-p2bt55kaajute54ian765qemssa1ctln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBelvSocdukwoJddJao1docM7X6idB_guc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "443634677513-p2bt55kaajute54ian765qemssa1ctln.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

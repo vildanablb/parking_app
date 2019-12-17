@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/mapFragment"
+            android:title="Map"
+            android:icon="@drawable/ic_map_black_24dp"/>
+        <item
+            android:id="@+id/feedFragment"
+            android:title="Live Feed"
+            android:icon="@drawable/ic_car_black_24dp"/>
+        <item
+            android:id="@+id/parkingListFragment"
+            android:title="Parking Spots"
+            android:icon="@drawable/ic_local_parking_black_24dp"/>
+        <item
+            android:id="@+id/logoutFragment"
+            android:title="Logout"
+            android:icon="@drawable/ic_settings_black_24dp"/>
+    </group>
+</menu>

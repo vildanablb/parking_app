@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/menu_nav"
+    app:startDestination="@id/mapFragment">
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.parking_app.ui.main.MapFragment"
+        android:label="MapFragment" />
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.example.parking_app.ui.main.FeedFragment"
+        android:label="FeedFragment" />
+    <fragment
+        android:id="@+id/parkingListFragment"
+        android:name="com.example.parking_app.ui.main.ParkingListFragment"
+        android:label="ParkingListFragment" />
+    <fragment
+        android:id="@+id/logoutFragment"
+        android:name="com.example.parking_app.ui.main.LogoutFragment"
+        android:label="LogoutFragment" />
+</navigation>
