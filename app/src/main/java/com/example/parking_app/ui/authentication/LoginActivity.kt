@@ -4,20 +4,17 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
+import com.example.parking_app.BuildConfig
 import com.example.parking_app.R
 import com.example.parking_app.ui.main.MainActivity
+import com.example.parking_app.util.FirebaseUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -27,8 +24,8 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : AppCompatActivity() {
 
     internal var client: GoogleSignInClient? = null
-    internal var auth: FirebaseAuth? = null
     internal var user: FirebaseUser? = null
+
     internal val SIGN_IN_CODE = 0
 
     internal var currentUser: FirebaseUser? = null
@@ -47,18 +44,17 @@ class LoginActivity : AppCompatActivity() {
 
     fun signIn() {
 
-        Toast.makeText(this, "Trying to sign in", Toast.LENGTH_SHORT).show()
         val signInIntent = client?.signInIntent
         startActivityForResult(signInIntent, SIGN_IN_CODE)
 
     }
 
-
     fun setAuth() {
         FirebaseApp.initializeApp(this)
-        auth = FirebaseAuth.getInstance()
+        FirebaseUtil.auth = FirebaseAuth.getInstance()
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("443634677513-p2bt55kaajute54ian765qemssa1ctln.apps.googleusercontent.com")
+            .requestIdToken(BuildConfig.REQUEST_ID_TOKEN)
             .requestEmail().build()
 
         client = GoogleSignIn.getClient(this, gso)
@@ -73,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)
                 firebaseAuthWithGoogle(account!!)
             } catch (e: ApiException) {
-                Toast.makeText(this, "Sign in failed 1 ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, e.statusMessage, Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -88,12 +84,12 @@ class LoginActivity : AppCompatActivity() {
 
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         try {
-            auth?.signInWithCredential(credential)
+            FirebaseUtil.auth?.signInWithCredential(credential)
                 ?.addOnCompleteListener(
                     this
                 ) { task ->
                     if (task.isSuccessful) {
-                        val user = auth?.currentUser
+                        val user = FirebaseUtil.auth?.currentUser
                         progress.dismiss()
                         MainActivity.launch(this, null, user, user?.photoUrl)
                         finishAffinity()
@@ -108,9 +104,9 @@ class LoginActivity : AppCompatActivity() {
 
                     }
                 }
-        } catch (e: Exception) {
+        } catch (e: ApiException) {
             e.printStackTrace()
-            Toast.makeText(this, "Google sign in fail 2", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, e.statusMessage , Toast.LENGTH_SHORT).show()
             progress.dismiss()
         }
 

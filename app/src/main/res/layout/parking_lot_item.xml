@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/selectable_bg_rounded_15dp"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_parking"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/parking_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Parking Bjelave"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toRightOf="@id/icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="200m"
+            app:layout_constraintLeft_toRightOf="@id/icon"
+            app:layout_constraintTop_toBottomOf="@id/parking_name" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_arrow_right_black"
+            android:tint="@color/metallicBlue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/info_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingLeft="15dp">
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:text="Address"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/capacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/address"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="15sp"
+            android:text="Capacity"/>
+
+        <TextView
+            android:id="@+id/all_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/capacity"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="15sp"
+            android:text="24 hours"/>
+
+        <TextView
+            android:id="@+id/guard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/all_day"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="15sp"
+            android:text="Guard"/>
+
+        <TextView
+            android:id="@+id/surveillance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/guard"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="15sp"
+            android:text="surveillance"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

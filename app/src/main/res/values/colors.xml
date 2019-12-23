@@ -6,6 +6,9 @@
     <color name="greenyBlue">#3db3c3</color>
     <color name="orangish">#f88052</color>
     <color name="white">#FFF</color>
+    <color name="metallicBlue">#4e7a7f</color>
+    <color name="black">#000</color>
+
 
 
 </resources>
