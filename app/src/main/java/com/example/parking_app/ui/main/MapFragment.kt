@@ -1,62 +1,147 @@
 package com.example.parking_app.ui.main
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.parking_app.R
+import com.example.parking_app.api.ParkingLot
+import com.example.parking_app.util.FirebaseUtil
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
+class MapFragment : Fragment(),CoroutineScope {
 
-class MapFragment : Fragment() {
-
-
+    override val coroutineContext: CoroutineContext = Dispatchers.Main
     private val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
-    private var googleMap:GoogleMap? = null
+    private var googleMap: GoogleMap? = null
+    var location: Location? = null
+    var mapFragment: SupportMapFragment? = null
+    var parkingList : ArrayList<ParkingLot> = arrayListOf()
+    private lateinit var locationClient: FusedLocationProviderClient
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(com.example.parking_app.R.layout.fragment_map, container, false)
-        activity?.actionBar?.title = "Map"
+    private var locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            if(location == null){
+                Toast.makeText(context,"no location provided", Toast.LENGTH_LONG).show()
+            }
+            location = locationResult.lastLocation
+        }
+    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_map, container, false)
         return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        locationClient = LocationServices.getFusedLocationProviderClient(context!!)
+    }
+
+    override fun onPause() {
+        locationClient.removeLocationUpdates(locationCallback)
+        super.onPause()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync{
-            it.uiSettings.isZoomControlsEnabled = true
-            val center = LatLng(40.7143528,-74.0059731)
-            it.addMarker(MarkerOptions().position(center).title("Marker 1")
-                .icon(bitmapDescriptorFromVector(requireContext(),R.drawable.ic_parking_marker)))
+        mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        launch {
+            parkingList = FirebaseUtil.getParkingLots()
+            setupMap(parkingList)
+        }
 
-            it.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 18f))
+        fab.setOnClickListener {
+            TrafficProblemDialog().show(childFragmentManager, null)
+        }
+
+    }
+    fun setupMap(parkinglist: ArrayList<ParkingLot>){
+
+        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION), 1)
 
         }
+        else{
+            mapFragment?.getMapAsync {
+                it.isMyLocationEnabled = true
+                val center = LatLng(location?.latitude ?: 0.0, location?.longitude ?: 0.0)
+                it.uiSettings.isMyLocationButtonEnabled = true
+                it.uiSettings.isMapToolbarEnabled = false
+                it.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 15f))
+                for(parking in parkinglist){
+                    it.addMarker(
+                        MarkerOptions().position(LatLng(parking.lat.toDouble(), parking.lon.toDouble()))
+                            .title(parking.parking_name).icon(
+                                bitmapDescriptorFromVector(requireContext(),R.drawable.ic_parking_marker)
+                            )
+                    )
+                }
+
+            }
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+        if (requestCode == 1 && grantResults.fold(true) { sum, result -> sum && result == PackageManager.PERMISSION_GRANTED }) {
+            locationClient.requestLocationUpdates(LocationRequest.create().apply {
+                interval = 10000
+            }, locationCallback, null)
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
         return ContextCompat.getDrawable(context, vectorResId)?.run {
             setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val bitmap =
+                Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
             draw(Canvas(bitmap))
             BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
 
 
-
     override fun onResume() {
+        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationClient.lastLocation.addOnSuccessListener {
+                if (location == null && it != null) {
+                }
+                location = it
+                setupMap(parkingList)
+            }
+            locationClient.requestLocationUpdates(LocationRequest.create().apply {
+                interval = 10000
+            }, locationCallback, null)
+        }
         super.onResume()
     }
 

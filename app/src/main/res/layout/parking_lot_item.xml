@@ -5,14 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    android:background="@drawable/selectable_bg_rounded_15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginLeft="15dp"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:background="@drawable/selectable_bg_rounded_15dp"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/selectable_bg_rounded_15dp"
         android:padding="15dp">
 
         <ImageView
@@ -60,60 +64,85 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:paddingLeft="15dp">
+        android:paddingLeft="25dp"
+        android:paddingBottom="20dp"
+        >
 
         <TextView
             android:id="@+id/address"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:text="Address"
+            android:text="Patriotske Lige 50"
+            android:drawableLeft="@drawable/ic_location_city_black_24dp"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dp"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:layout_marginRight="25dp"/>
         <TextView
             android:id="@+id/capacity"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/address"
             android:layout_marginTop="10dp"
             android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textSize="15sp"
-            android:text="Capacity"/>
+            android:gravity="center_vertical"
+            android:drawableLeft="@drawable/ic_parking_capacity"
+            android:drawablePadding="10dp"
+            android:text="Capacity: 2000"/>
 
         <TextView
             android:id="@+id/all_day"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/capacity"
             android:layout_marginTop="10dp"
             android:textColor="@color/black"
+            android:layout_marginRight="25dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textSize="15sp"
-            android:text="24 hours"/>
+            android:text="24 hours"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/ic_ticker"
+            android:drawableLeft="@drawable/ic_all_day"/>
 
         <TextView
             android:id="@+id/guard"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="25dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/all_day"
             android:layout_marginTop="10dp"
             android:textColor="@color/black"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textSize="15sp"
-            android:text="Guard"/>
+            android:text="Guard"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/ic_ticker"
+            android:drawableLeft="@drawable/ic_policeman"/>
 
         <TextView
             android:id="@+id/surveillance"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_error"
+            android:layout_marginRight="25dp"
+            android:drawableLeft="@drawable/ic_surveillance_video_camera"
             app:layout_constraintTop_toBottomOf="@id/guard"
             android:layout_marginTop="10dp"
             android:textColor="@color/black"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textSize="15sp"
-            android:text="surveillance"/>
+            android:text="Surveillance"
+            />
 
 
 

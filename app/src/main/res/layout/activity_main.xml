@@ -6,16 +6,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/greenyBlue"/>
+        android:layout_height="match_parent">
 
         <fragment
             android:id="@+id/my_nav_host_fragment"
@@ -25,7 +18,8 @@
             app:defaultNavHost="true"
             app:navGraph="@navigation/menu_nav" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"

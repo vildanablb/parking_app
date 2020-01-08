@@ -5,12 +5,15 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ParkingLot ( val parking_name: String = "",
+                        val address: String = "",
                         val capacity: Int = 0,
                         val lon: String = "",
                         val lat: String = "",
                         val all_day: Boolean? = false,
                         val surveillance: Boolean = false,
-                        val guard: Boolean = false): Parcelable
+                        val guard: Boolean = false): Parcelable{
+
+}
 
 
 
