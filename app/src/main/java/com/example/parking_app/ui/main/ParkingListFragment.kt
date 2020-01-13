@@ -41,6 +41,7 @@ class ParkingListFragment : Fragment(), CoroutineScope {
         launch {
             parkingLots = FirebaseUtil.getParkingLots()
             parkingListAdapter.parkings = parkingLots
+            parkingListAdapter.location = FirebaseUtil.location
             rv_parking_list.adapter = parkingListAdapter
             rv_parking_list.layoutManager = LinearLayoutManager(context)
 

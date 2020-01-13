@@ -10,10 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.parking_app.R
 import com.example.parking_app.api.ParkingLot
 import kotlinx.android.synthetic.main.parking_lot_item.view.*
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import java.math.RoundingMode
+import kotlin.math.*
 
 class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
@@ -27,7 +25,7 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     private val dropdownOpen = SparseBooleanArray()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        val inflater = LayoutInflater.from(parent.context);
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             -1 -> LoaderViewHolder(inflater.inflate(R.layout.lazy_loader_spinner, parent, false))
             else -> BaseViewHolder(inflater.inflate(R.layout.parking_lot_item, parent, false))
@@ -48,7 +46,7 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
                 view.distance.text = "${distance(
                     location.latitude, location.longitude, item?.lat?.toDouble()
                         ?: 0.0, item?.lon?.toDouble() ?: 0.0
-                ).toInt()} km"
+                ).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()} km"
             }
 
             else -> {

@@ -1,5 +1,6 @@
 package com.example.parking_app.util
 
+import android.location.Location
 import android.widget.Toast
 import com.example.parking_app.api.ParkingLot
 import com.google.firebase.auth.FirebaseAuth
@@ -13,6 +14,7 @@ object FirebaseUtil {
 
     var user: FirebaseUser? = null
     var auth: FirebaseAuth? = null
+    var location: Location? = null
 
 
     suspend fun getParkingLots(): ArrayList<ParkingLot> {

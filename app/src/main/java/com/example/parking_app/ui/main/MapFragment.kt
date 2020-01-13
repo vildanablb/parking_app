@@ -41,10 +41,10 @@ class MapFragment : Fragment(),CoroutineScope {
 
     private var locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            if(location == null){
+            if(FirebaseUtil.location == null){
                 Toast.makeText(context,"no location provided", Toast.LENGTH_LONG).show()
             }
-            location = locationResult.lastLocation
+            FirebaseUtil.location = locationResult.lastLocation
         }
     }
     override fun onCreateView(
@@ -90,22 +90,21 @@ class MapFragment : Fragment(),CoroutineScope {
         else{
             mapFragment?.getMapAsync {
                 it.isMyLocationEnabled = true
-                val center = LatLng(location?.latitude ?: 0.0, location?.longitude ?: 0.0)
+                val center = LatLng(FirebaseUtil.location?.latitude ?: 0.0, FirebaseUtil.location?.longitude ?: 0.0)
                 it.uiSettings.isMyLocationButtonEnabled = true
                 it.uiSettings.isMapToolbarEnabled = false
+                //it.uiSettings.isZoomControlsEnabled = true
+
                 it.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 15f))
                 for(parking in parkinglist){
                     it.addMarker(
                         MarkerOptions().position(LatLng(parking.lat.toDouble(), parking.lon.toDouble()))
                             .title(parking.parking_name).icon(
-                                bitmapDescriptorFromVector(requireContext(),R.drawable.ic_parking_marker)
-                            )
+                                bitmapDescriptorFromVector(requireContext(),R.drawable.ic_parking_marker))
                     )
                 }
-
             }
         }
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -129,13 +128,12 @@ class MapFragment : Fragment(),CoroutineScope {
         }
     }
 
-
     override fun onResume() {
         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationClient.lastLocation.addOnSuccessListener {
-                if (location == null && it != null) {
+                if (FirebaseUtil.location == null && it != null) {
                 }
-                location = it
+                FirebaseUtil.location = it
                 setupMap(parkingList)
             }
             locationClient.requestLocationUpdates(LocationRequest.create().apply {
