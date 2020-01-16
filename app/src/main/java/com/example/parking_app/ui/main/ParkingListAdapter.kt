@@ -20,6 +20,8 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
             field = value
             notifyDataSetChanged()
         }
+
+    var isWorking = false
     var location: Location? = null
     var onItemClickListener: ((parkingLot: ParkingLot?, position: Int) -> Unit)? = null
     private val dropdownOpen = SparseBooleanArray()
@@ -41,7 +43,7 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         val item = parkings?.get(position)
         view.parking_name.text = item?.parking_name
         val location = location
-        when{
+        when {
             location != null -> {
                 view.distance.text = "${distance(
                     location.latitude, location.longitude, item?.lat?.toDouble()
@@ -56,6 +58,8 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
 
         view.address.text = item?.address
+        view.capacity.text = item?.capacity.toString()
+        view.price.text = item?.price + " BAM/h"
         view.surveillance.setCompoundDrawablesRelativeWithIntrinsicBounds(
             R.drawable.ic_surveillance_video_camera,
             0,
@@ -84,11 +88,10 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
             0
         )
 
-        if(dropdownOpen[position]){
+        if (dropdownOpen[position]) {
             view.info_container.visibility = View.VISIBLE
             view.arrow.rotation = 90f
-        }
-        else{
+        } else {
             view.info_container.visibility = View.GONE
             view.rotation = 0f
         }
@@ -96,6 +99,21 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
             dropdownOpen[holder.adapterPosition] = !dropdownOpen[holder.adapterPosition]
             notifyItemChanged(holder.adapterPosition)
             //onItemClickListener?.invoke(item, holder.adapterPosition)
+        }
+
+        if(!item?.rating.isNullOrEmpty()){
+            val rating = (item?.rating!!.sum().toDouble()/item.rating.size).toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+            view.rating.text = "Rating: " + rating + "/5";
+        }
+
+        view.btn_park.setOnClickListener {
+            isWorking = if (!isWorking) {
+                view.btn_park.text = "Stop Parking"
+                true
+            } else {
+                view.btn_park.text = "Park here"
+                false
+            }
         }
     }
 

@@ -4,16 +4,18 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class ParkingLot ( val parking_name: String = "",
-                        val address: String = "",
-                        val capacity: Int = 0,
-                        val lon: String = "",
-                        val lat: String = "",
-                        val all_day: Boolean? = false,
-                        val surveillance: Boolean = false,
-                        val guard: Boolean = false): Parcelable{
-
-}
+data class ParkingLot(
+    val parking_name: String = "",
+    val address: String = "",
+    val capacity: Int = 0,
+    val lon: String = "",
+    val lat: String = "",
+    val all_day: Boolean? = false,
+    val surveillance: Boolean = false,
+    val guard: Boolean = false,
+    val price: String = "",
+    val rating: ArrayList<Int> = arrayListOf()
+) : Parcelable
 
 
 

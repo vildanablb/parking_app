@@ -143,6 +143,58 @@
             android:textSize="15sp"
             android:text="Surveillance"
             />
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:drawableLeft="@drawable/ic_money"
+            app:layout_constraintTop_toBottomOf="@id/surveillance"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="15sp"
+            android:text="Price: 2 BAM/h"
+            />
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            app:layout_constraintTop_toBottomOf="@id/price"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Rating: 4.5/5"
+            />
+
+        <Button
+            android:id="@+id/btn_park"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/rating"
+            android:layout_marginTop="15dp"
+            android:text="park car here"
+            android:layout_marginRight="25dp"
+            />
+
+        <Chronometer
+            android:id="@+id/parking_timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/btn_park"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:gravity="center"
+            android:layout_marginRight="25dp"/>
+
 
 
 

@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.parking_app.R
 import com.example.parking_app.api.ParkingLot
+import com.example.parking_app.api.TrafficProblem
 import com.example.parking_app.util.FirebaseUtil
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
@@ -29,24 +30,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class MapFragment : Fragment(),CoroutineScope {
+class MapFragment : Fragment(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Dispatchers.Main
     private val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
     private var googleMap: GoogleMap? = null
     var location: Location? = null
     var mapFragment: SupportMapFragment? = null
-    var parkingList : ArrayList<ParkingLot> = arrayListOf()
+    var parkingList: ArrayList<ParkingLot> = arrayListOf()
+    var trafficProblemList: ArrayList<TrafficProblem> = arrayListOf()
     private lateinit var locationClient: FusedLocationProviderClient
 
     private var locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            if(FirebaseUtil.location == null){
-                Toast.makeText(context,"no location provided", Toast.LENGTH_LONG).show()
+            if (FirebaseUtil.location == null) {
+                Toast.makeText(context, "no location provided", Toast.LENGTH_LONG).show()
             }
             FirebaseUtil.location = locationResult.lastLocation
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,7 +74,8 @@ class MapFragment : Fragment(),CoroutineScope {
         mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         launch {
             parkingList = FirebaseUtil.getParkingLots()
-            setupMap(parkingList)
+            trafficProblemList = FirebaseUtil.getTrafficProblems()
+            setupMap(parkingList, trafficProblemList)
         }
 
         fab.setOnClickListener {
@@ -79,35 +83,81 @@ class MapFragment : Fragment(),CoroutineScope {
         }
 
     }
-    fun setupMap(parkinglist: ArrayList<ParkingLot>){
+
+    fun setupMap(
+        parkinglist: ArrayList<ParkingLot>,
+        trafficProblemList: ArrayList<TrafficProblem>
+    ) {
 
         if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_DENIED) {
-                requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ), 1
+            )
 
-        }
-        else{
+        } else {
             mapFragment?.getMapAsync {
                 it.isMyLocationEnabled = true
-                val center = LatLng(FirebaseUtil.location?.latitude ?: 0.0, FirebaseUtil.location?.longitude ?: 0.0)
+                val center = LatLng(
+                    FirebaseUtil.location?.latitude ?: 0.0,
+                    FirebaseUtil.location?.longitude ?: 0.0
+                )
                 it.uiSettings.isMyLocationButtonEnabled = true
                 it.uiSettings.isMapToolbarEnabled = false
                 //it.uiSettings.isZoomControlsEnabled = true
 
                 it.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 15f))
-                for(parking in parkinglist){
+                for (parking in parkinglist) {
                     it.addMarker(
-                        MarkerOptions().position(LatLng(parking.lat.toDouble(), parking.lon.toDouble()))
+                        MarkerOptions().position(
+                            LatLng(
+                                parking.lat.toDouble(),
+                                parking.lon.toDouble()
+                            )
+                        )
                             .title(parking.parking_name).icon(
-                                bitmapDescriptorFromVector(requireContext(),R.drawable.ic_parking_marker))
+                                bitmapDescriptorFromVector(
+                                    requireContext(),
+                                    R.drawable.ic_parking_marker
+                                )
+                            )
                     )
+                }
+
+                for (problem in trafficProblemList) {
+                    var geo = FirebaseUtil.getLocationFromAddress(context, problem.address)
+                    var icon = when (problem.category) {
+                        "police" -> R.drawable.marker_patrol
+                        "jam" -> R.drawable.marker_traffic_jam
+                        "cameras" -> R.drawable.marker_speeding
+                        else -> R.drawable.marker_car_collision
+                    }
+
+                    if (geo != null) {
+                        it.addMarker(
+                            MarkerOptions().position(LatLng(geo.latitude, geo.longitude))
+                                .icon(
+                                    bitmapDescriptorFromVector(
+                                        requireContext(),
+                                        icon
+                                    )
+                                ).title(problem.description)
+                        )
+                    }
                 }
             }
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
 
         if (requestCode == 1 && grantResults.fold(true) { sum, result -> sum && result == PackageManager.PERMISSION_GRANTED }) {
             locationClient.requestLocationUpdates(LocationRequest.create().apply {
@@ -129,12 +179,16 @@ class MapFragment : Fragment(),CoroutineScope {
     }
 
     override fun onResume() {
-        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                context!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             locationClient.lastLocation.addOnSuccessListener {
                 if (FirebaseUtil.location == null && it != null) {
                 }
                 FirebaseUtil.location = it
-                setupMap(parkingList)
+                setupMap(parkingList, trafficProblemList)
             }
             locationClient.requestLocationUpdates(LocationRequest.create().apply {
                 interval = 10000
