@@ -131,10 +131,10 @@ class MapFragment : Fragment(), CoroutineScope {
                 for (problem in trafficProblemList) {
                     var geo = FirebaseUtil.getLocationFromAddress(context, problem.address)
                     var icon = when (problem.category) {
-                        "police" -> R.drawable.marker_patrol
-                        "jam" -> R.drawable.marker_traffic_jam
-                        "cameras" -> R.drawable.marker_speeding
-                        else -> R.drawable.marker_car_collision
+                        "police" -> R.drawable.patrol_marker
+                        "jam" -> R.drawable.marker_traffic
+                        "cameras" -> R.drawable.marker_speed_camera
+                        else -> R.drawable.crash_marker
                     }
 
                     if (geo != null) {
