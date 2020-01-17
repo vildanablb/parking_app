@@ -1,6 +1,7 @@
 package com.example.parking_app.ui.authentication
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.parking_app.BuildConfig
 import com.example.parking_app.R
 import com.example.parking_app.ui.main.MainActivity
+import com.example.parking_app.ui.main.TrafficProblemActivity
 import com.example.parking_app.util.FirebaseUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -39,6 +41,10 @@ class LoginActivity : AppCompatActivity() {
         }
         google_btn.setOnClickListener {
             signIn()
+        }
+
+        register.setOnClickListener {
+            RegisterActivity.launch(this)
         }
     }
 
@@ -110,6 +116,12 @@ class LoginActivity : AppCompatActivity() {
             progress.dismiss()
         }
 
+    }
+
+    companion object{
+        fun launch(context: Context){
+            context.startActivity(Intent(context,LoginActivity::class.java))
+        }
     }
 
 }

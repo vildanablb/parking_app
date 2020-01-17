@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import com.example.parking_app.R
 import com.example.parking_app.api.ParkingLot
 import com.example.parking_app.api.TrafficProblem
+import com.example.parking_app.util.CustomInfoWindowMap
 import com.example.parking_app.util.FirebaseUtil
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
@@ -112,20 +113,36 @@ class MapFragment : Fragment(), CoroutineScope {
 
                 it.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 15f))
                 for (parking in parkinglist) {
-                    it.addMarker(
-                        MarkerOptions().position(
-                            LatLng(
-                                parking.lat.toDouble(),
-                                parking.lon.toDouble()
+                    val customInfoWindowMap = CustomInfoWindowMap(requireContext())
+                    //it.setInfoWindowAdapter(customInfoWindowMap)
+                    val options = MarkerOptions().apply {
+                        it.setInfoWindowAdapter(customInfoWindowMap)
+                        this.position(LatLng(
+                            parking.lat.toDouble(),
+                            parking.lon.toDouble()
+                        ))
+                        this.icon(
+                            bitmapDescriptorFromVector(
+                                requireContext(),
+                                R.drawable.ic_parking_marker
                             )
                         )
-                            .title(parking.parking_name).icon(
-                                bitmapDescriptorFromVector(
-                                    requireContext(),
-                                    R.drawable.ic_parking_marker
-                                )
-                            )
+                    }
+                    val markerOptions = MarkerOptions().position(
+                        LatLng(
+                            parking.lat.toDouble(),
+                            parking.lon.toDouble()
+                        )
                     )
+                        .icon(
+                            bitmapDescriptorFromVector(
+                                requireContext(),
+                                R.drawable.ic_parking_marker
+                            )
+                        )
+                    val marker = it.addMarker(options)
+                    marker.tag = parking
+
                 }
 
                 for (problem in trafficProblemList) {
@@ -138,15 +155,19 @@ class MapFragment : Fragment(), CoroutineScope {
                     }
 
                     if (geo != null) {
-                        it.addMarker(
-                            MarkerOptions().position(LatLng(geo.latitude, geo.longitude))
-                                .icon(
-                                    bitmapDescriptorFromVector(
-                                        requireContext(),
-                                        icon
-                                    )
-                                ).title(problem.description)
-                        )
+                        val options = MarkerOptions().apply {
+                            this.position(LatLng(geo.latitude, geo.longitude))
+                            this.icon(
+                                bitmapDescriptorFromVector(
+                                    requireContext(),
+                                    icon
+                                )
+                            )
+                            this.title(problem.description)
+                        }
+
+                        it.addMarker(options)
+
                     }
                 }
             }
