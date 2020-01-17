@@ -81,6 +81,7 @@
                 app:layout_constraintTop_toBottomOf="@id/category_container">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="What kind of problem did you ran into?"
@@ -98,6 +99,7 @@
                 app:layout_constraintTop_toBottomOf="@id/problem_text">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Where did it happen (address or location)"

@@ -75,6 +75,15 @@ object FirebaseUtil {
         return null
     }
 
+   suspend fun addTrafficProblem(trafficProblem: TrafficProblem){
+       try{
+           FirebaseFirestore.getInstance().collection("TrafficProblem").add(trafficProblem).await()
+
+       }catch (e:Exception){
+           Timber.d("ERROR " + e.localizedMessage)
+       }
+    }
+
 
 
 }

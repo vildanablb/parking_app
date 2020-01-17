@@ -7,11 +7,19 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.parking_app.R
+import com.example.parking_app.api.TrafficProblem
+import com.example.parking_app.util.FirebaseUtil
 import com.example.parking_app.util.GridSpacingDecoration
 import kotlinx.android.synthetic.main.activity_traffic_problem.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.coroutines.CoroutineContext
 
-class TrafficProblemActivity : AppCompatActivity() {
-
+class TrafficProblemActivity : AppCompatActivity(), CoroutineScope{
+    override val coroutineContext: CoroutineContext = Dispatchers.Main
     private val categories: ArrayList<TrafficCategoryModel> by lazy { arrayListOf(
         TrafficCategoryModel(R.drawable.ic_car_collision, "collision"),
         TrafficCategoryModel(R.drawable.ic_traffic_jam, "jam"),
@@ -32,11 +40,22 @@ class TrafficProblemActivity : AppCompatActivity() {
         }
 
         submit.setOnClickListener {
-            Toast.makeText(this, "Report successfully sent", Toast.LENGTH_LONG).show();
-            finish()
+
+            launch{
+                val trafficProblem = TrafficProblem(trafficCategoryAdapter.selectedCategory,
+                                                    description.text.toString(),
+                                                    address.text.toString(),
+                                                    Date().toString() )
+                FirebaseUtil.addTrafficProblem(trafficProblem)
+                MainActivity.launch(this@TrafficProblemActivity, R.id.mapFragment)
+                finish()
+            }
+
         }
 
     }
+
+
 
     companion object{
          fun launch(context: Context){
