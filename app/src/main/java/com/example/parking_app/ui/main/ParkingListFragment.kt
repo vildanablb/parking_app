@@ -47,9 +47,15 @@ class ParkingListFragment : Fragment(), CoroutineScope {
 
         }
 
-        parkingListAdapter.onItemClickListener = { source, _ ->
+        parkingListAdapter.onItemClickListener = { source, _,isWorking ->
             if (source != null) {
-                Toast.makeText(context, "clcked " + source.parking_name, Toast.LENGTH_LONG).show()
+                if(!isWorking)
+                RateParkingDialog.create(source).show(childFragmentManager,null)
+                else{
+                    launch {
+                        FirebaseUtil.updateParkingStatus(source, true )
+                    }
+                }
             }
         }
 

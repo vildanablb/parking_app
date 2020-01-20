@@ -110,17 +110,18 @@ class MapFragment : Fragment(), CoroutineScope {
                 it.uiSettings.isMyLocationButtonEnabled = true
                 it.uiSettings.isMapToolbarEnabled = false
                 //it.uiSettings.isZoomControlsEnabled = true
-
+                val customInfoWindowMap = CustomInfoWindowMap(requireContext())
                 it.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 15f))
                 for (parking in parkinglist) {
-                    val customInfoWindowMap = CustomInfoWindowMap(requireContext())
                     //it.setInfoWindowAdapter(customInfoWindowMap)
                     val options = MarkerOptions().apply {
-                        it.setInfoWindowAdapter(customInfoWindowMap)
-                        this.position(LatLng(
-                            parking.lat.toDouble(),
-                            parking.lon.toDouble()
-                        ))
+                        //it.setInfoWindowAdapter(customInfoWindowMap)
+                        this.position(
+                            LatLng(
+                                parking.lat.toDouble(),
+                                parking.lon.toDouble()
+                            )
+                        )
                         this.icon(
                             bitmapDescriptorFromVector(
                                 requireContext(),
@@ -166,10 +167,15 @@ class MapFragment : Fragment(), CoroutineScope {
                             this.title(problem.description)
                         }
 
-                        it.addMarker(options)
+                        val marker = it.addMarker(options)
+                        marker.tag = problem
+                        customInfoWindowMap.trafficProblemMarkers.add(marker.id)
+
 
                     }
                 }
+
+                it.setInfoWindowAdapter(customInfoWindowMap)
             }
         }
     }

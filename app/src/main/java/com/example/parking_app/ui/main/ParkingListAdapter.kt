@@ -12,6 +12,8 @@ import com.example.parking_app.api.ParkingLot
 import kotlinx.android.synthetic.main.parking_lot_item.view.*
 import java.math.RoundingMode
 import kotlin.math.*
+import androidx.appcompat.app.AppCompatActivity
+
 
 class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
@@ -23,11 +25,12 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
     var isWorking = false
     var location: Location? = null
-    var onItemClickListener: ((parkingLot: ParkingLot?, position: Int) -> Unit)? = null
+    var onItemClickListener: ((parkingLot: ParkingLot?, position: Int, isWorking: Boolean) -> Unit)? = null
     private val dropdownOpen = SparseBooleanArray()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val inflater = LayoutInflater.from(parent.context)
+
         return when (viewType) {
             -1 -> LoaderViewHolder(inflater.inflate(R.layout.lazy_loader_spinner, parent, false))
             else -> BaseViewHolder(inflater.inflate(R.layout.parking_lot_item, parent, false))
@@ -56,7 +59,12 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
             }
         }
 
-
+        isWorking = item?.parked_car ?: false
+        if(isWorking)
+            view.btn_park.text = "Stop Parking"
+        else{
+            view.btn_park.text = "Park here"
+        }
         view.address.text = item?.address
         view.capacity.text = item?.capacity.toString()
         view.price.text = item?.price + " BAM/h"
@@ -101,17 +109,28 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
             //onItemClickListener?.invoke(item, holder.adapterPosition)
         }
 
-        if(!item?.rating.isNullOrEmpty()){
-            val rating = (item?.rating!!.sum().toDouble()/item.rating.size).toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+        if (!item?.rating.isNullOrEmpty()) {
+            val rating = (item?.rating!!.sum().toDouble() / item.rating.size).toBigDecimal()
+                .setScale(1, RoundingMode.UP).toDouble()
             view.rating.text = "Rating: " + rating + "/5";
         }
 
         view.btn_park.setOnClickListener {
             isWorking = if (!isWorking) {
+                onItemClickListener?.invoke(
+                    item,
+                    holder.adapterPosition,
+                    true
+                )
                 view.btn_park.text = "Stop Parking"
                 true
             } else {
-                view.btn_park.text = "Park here"
+                onItemClickListener?.invoke(
+                    item,
+                    holder.adapterPosition,
+                    false
+                )
+                view.btn_park . text = "Park here"
                 false
             }
         }

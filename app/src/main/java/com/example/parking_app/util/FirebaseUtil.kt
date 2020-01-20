@@ -36,17 +36,18 @@ object FirebaseUtil {
         return parkingLots
     }
 
-    suspend fun getTrafficProblems(): ArrayList<TrafficProblem>{
+    suspend fun getTrafficProblems(): ArrayList<TrafficProblem> {
         var trafficProblems: ArrayList<TrafficProblem> = arrayListOf()
 
-        try{
-            val snapshot = FirebaseFirestore.getInstance().collection("TrafficProblem").get().await()
-            for(document in snapshot){
+        try {
+            val snapshot =
+                FirebaseFirestore.getInstance().collection("TrafficProblem").get().await()
+            for (document in snapshot) {
                 trafficProblems.add(document.toObject(TrafficProblem::class.java))
             }
             return trafficProblems
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Timber.d("ERROR " + e.localizedMessage)
         }
 
@@ -75,15 +76,29 @@ object FirebaseUtil {
         return null
     }
 
-   suspend fun addTrafficProblem(trafficProblem: TrafficProblem){
-       try{
-           FirebaseFirestore.getInstance().collection("TrafficProblem").add(trafficProblem).await()
+    suspend fun addTrafficProblem(trafficProblem: TrafficProblem) {
+        try {
+            FirebaseFirestore.getInstance().collection("TrafficProblem").add(trafficProblem).await()
 
-       }catch (e:Exception){
-           Timber.d("ERROR " + e.localizedMessage)
-       }
+        } catch (e: Exception) {
+            Timber.d("ERROR " + e.localizedMessage)
+        }
     }
 
+    suspend fun updateParkingStatus(parkingLot: ParkingLot, isWorking: Boolean, userRating: Int ? = null) {
+        val userMap: HashMap<String, Any> = HashMap()
+        val newRating: ArrayList<Int> = parkingLot.rating
+        if(userRating != null)
+        newRating.add(userRating)
+        userMap["parked_car"] = isWorking
+        userMap["rating"] = newRating
+        try {
+            FirebaseFirestore.getInstance().collection("ParkingLot").document(parkingLot.parking_id).update(userMap).await()
+
+        } catch (e: Exception) {
+            Timber.d("ERROR " + e.localizedMessage)
+        }
+    }
 
 
 }
