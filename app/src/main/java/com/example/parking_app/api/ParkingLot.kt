@@ -16,7 +16,8 @@ data class ParkingLot(
     val guard: Boolean = false,
     val price: String = "",
     val parked_car: Boolean = false,
-    val rating: ArrayList<Int> = arrayListOf()
+    val rating: ArrayList<Int> = arrayListOf(),
+    val available: Boolean = false
 ) : Parcelable
 
 

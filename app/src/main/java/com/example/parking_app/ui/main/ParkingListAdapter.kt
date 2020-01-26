@@ -1,5 +1,7 @@
 package com.example.parking_app.ui.main
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.location.Location
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -68,6 +70,12 @@ class ParkingListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         view.address.text = item?.address
         view.capacity.text = item?.capacity.toString()
         view.price.text = item?.price + " BAM/h"
+        view.available_indicator.imageTintList = ColorStateList.valueOf(
+            when{
+                item?.available == true -> Color.parseColor("#a8e2bf")
+                else -> Color.parseColor("#e16969")
+            }
+        )
         view.surveillance.setCompoundDrawablesRelativeWithIntrinsicBounds(
             R.drawable.ic_surveillance_video_camera,
             0,
