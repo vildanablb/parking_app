@@ -13,6 +13,8 @@ import com.example.parking_app.api.ParkingLot
 import com.example.parking_app.util.BaseDialog
 import com.example.parking_app.util.FirebaseUtil
 import kotlinx.android.synthetic.main.dialog_rate_parking.view.*
+import kotlinx.android.synthetic.main.dialog_rate_parking.view.rating
+import kotlinx.android.synthetic.main.parking_lot_item.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +28,8 @@ class RateParkingDialog : DialogFragment(), CoroutineScope {
             LayoutInflater.from(requireContext()).inflate(R.layout.dialog_rate_parking, null, false)
         val parkingLot =
             requireArguments().getParcelable<ParkingLot>("parkingLot") ?: throw Exception("")
+
+        view.price_text.text = "Approximate price: " + (parkingLot.price.toDouble() * 2 ) + "KM"
         val newWorking = !parkingLot.parked_car
             view.close_icon.setOnClickListener {
                 dismiss()
